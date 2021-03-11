@@ -9,15 +9,15 @@ import seedu.duke.ui.UI;
 import java.util.ArrayList;
 
 import static seedu.duke.commands.DeleteLessonCommand.getLessonName;
+import static seedu.duke.common.Messages.MESSAGE_LESSONS_FOR_MODULE_FORMAT;
+import static seedu.duke.common.Messages.MESSAGE_PRINT_LESSONS_FORMAT;
 
 public class ListLessonsCommand extends Command {
-    public static final String PRINT_LESSONS_FORMAT = "%d. %s - %s\n \t%s\n \t%s\n \t%s" + System.lineSeparator();
-    public static final String MESSAGE_LESSONS_FOR_MODULE = "Lessons for %s:";
 
     public ListLessonsCommand() {
         Module module = ModuleList.getSelectedModule();
         String moduleCode = module.getModuleCode();
-        System.out.println(String.format(MESSAGE_LESSONS_FOR_MODULE, moduleCode));
+        System.out.println(String.format(MESSAGE_LESSONS_FOR_MODULE_FORMAT, moduleCode));
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ListLessonsCommand extends Command {
             String lessonOnlineLink = lesson.getOnlineLink();
             String teacherName = lesson.getTeachingStaff().getName();
             String teacherEmail = lesson.getTeachingStaff().getEmail();
-            System.out.print(String.format(PRINT_LESSONS_FORMAT, counter, lessonName, lessonTime, lessonOnlineLink,
-                    teacherName, teacherEmail));
+            System.out.print(String.format(MESSAGE_PRINT_LESSONS_FORMAT, counter, lessonName, lessonTime,
+                    lessonOnlineLink, teacherName, teacherEmail));
             counter++;
         }
     }

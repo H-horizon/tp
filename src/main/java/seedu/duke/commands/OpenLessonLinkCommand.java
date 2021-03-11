@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import static seedu.duke.commands.DeleteLessonCommand.getLessonName;
+import static seedu.duke.common.Messages.LINUX_OPEN_LINK_COMMAND;
+import static seedu.duke.common.Messages.MESSAGE_CANNOT_OPEN_LESSON_LINK;
+import static seedu.duke.common.Messages.MESSAGE_OPEN_LESSON_LINK;
+import static seedu.duke.common.Messages.MESSAGE_OPEN_LESSON_LINK_FORMAT;
 
 public class OpenLessonLinkCommand extends Command {
-    public static final String MESSAGE_OPEN_LESSON_LINK = "Which lesson’s link would you like to open?";
-    public static final String OPEN_LESSON_LINK_FORMAT = "Opening %s link in browser." + System.lineSeparator();
-    public static final String MESSAGE_CANNOT_OPEN_LESSON_LINK = "Cannot open lesson link" + System.lineSeparator();
-    public static final String LINUX_COMMAND = "xdg-open ";
     private final Scanner commandLineReader = new Scanner(System.in);
 
     public OpenLessonLinkCommand() {
@@ -53,7 +53,7 @@ public class OpenLessonLinkCommand extends Command {
         for (int index : indexes) {
             Lesson lesson = lessonList.get(index - 1);
             String lessonName = getLessonName(lesson);
-            System.out.print(String.format(OPEN_LESSON_LINK_FORMAT, lessonName));
+            System.out.print(String.format(MESSAGE_OPEN_LESSON_LINK_FORMAT, lessonName));
             openLessonLink(lesson.getOnlineLink());
         }
     }
@@ -69,7 +69,7 @@ public class OpenLessonLinkCommand extends Command {
         } else {
             Runtime runtime = Runtime.getRuntime();
             try {
-                runtime.exec(LINUX_COMMAND + onlineLink);
+                runtime.exec(LINUX_OPEN_LINK_COMMAND + onlineLink);
             } catch (IOException e) {
                 System.out.print(MESSAGE_CANNOT_OPEN_LESSON_LINK);
             }

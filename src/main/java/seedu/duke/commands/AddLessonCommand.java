@@ -7,11 +7,12 @@ import seedu.duke.module.Module;
 import seedu.duke.module.ModuleList;
 import seedu.duke.ui.UI;
 
+import static seedu.duke.common.Messages.LAB_STRING;
+import static seedu.duke.common.Messages.LECTURE_STRING;
+import static seedu.duke.common.Messages.MESSAGE_ADDED_LESSON;
+import static seedu.duke.common.Messages.TUTORIAL_STRING;
+
 public class AddLessonCommand extends Command {
-    public static final String MESSAGE_ADDED_LESSON = "Added %s." + System.lineSeparator();
-    public static final String LECTURE_STRING = "lecture";
-    public static final String TUTORIAL_STRING = "tutorial";
-    public static final String LAB_STRING = "lab";
     private Lesson newLessonForModule;
 
     public AddLessonCommand(Lesson newLesson) {

@@ -12,7 +12,7 @@ public class Messages {
      */
     public static final String FORMAT_LIST_HELP = "%-8s - %s";
     public static final String FORMAT_LIST_ITEMS = "%2s. %s";
-  
+
     //Main
     public static final String MESSAGE_WELCOME = "";
 
@@ -53,5 +53,28 @@ public class Messages {
 
     public static final String MESSAGE_TASKS_TO_UNMARK = "Which done tasks would you like to undo?";
     public static final String COMMAND_VERB_UNMARK = "mark as undone";
+
+    //Lesson
+    public static final String MESSAGE_ADDED_LESSON = "Added %s." + System.lineSeparator();
+    public static final String LECTURE_STRING = "lecture";
+    public static final String TUTORIAL_STRING = "tutorial";
+    public static final String LAB_STRING = "lab";
+
+    public static final String MESSAGE_REMOVED_LESSON_FORMAT = "Removed %s." + System.lineSeparator();
+    public static final String MESSAGE_LESSON_OPTIONS_FORMAT = "%d. %s%n";
+    public static final String MESSAGE_DELETE_LESSONS = "Which lessons would you like to delete?";
+
+    public static final String MESSAGE_PRINT_LESSONS_FORMAT = "%d. %s - %s\n \t%s\n \t%s\n \t%s"
+            + System.lineSeparator();
+    public static final String MESSAGE_LESSONS_FOR_MODULE_FORMAT = "Lessons for %s:";
+
+    public static final String MESSAGE_OPEN_LESSON_LINK = "Which lesson’s link would you like to open?";
+    public static final String MESSAGE_OPEN_LESSON_LINK_FORMAT = "Opening %s link in browser." + System.lineSeparator();
+    public static final String MESSAGE_CANNOT_OPEN_LESSON_LINK = "Cannot open lesson link" + System.lineSeparator();
+    public static final String LINUX_OPEN_LINK_COMMAND = "xdg-open ";
+
+
+    public static final String MESSAGE_PRINT_LESSONS_TEACHING_STAFF_FORMAT = "%d. %s - %s" + System.lineSeparator();
+    public static final String MESSAGE_VIEW_TEACHING_STAFF_FOR_MODULE_FORMAT = "Teaching staff for %s:";
 
 }
