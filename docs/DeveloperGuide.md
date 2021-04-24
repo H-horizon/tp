@@ -1,6 +1,9 @@
+[<== Back to Home](README.md)
+
+<!--@@author ivanchongzhien-->
 # Developer Guide
 
-**GULIO (Get Ur Life In Order)** is a desktop app that provides a single consolidated and personalised workspace for NUS SOC students to organize their modules. It is optimized for use via a Command Line Interface (CLI) which SOC students will be familiar with typing in, instead of a Graphical User Interface (GUI).
+**GULIO (Get Ur Life In Order)** is a desktop app that provides a single consolidated and personalised workspace for NUS SoC students to organize their modules. It is optimized for use via a Command Line Interface (CLI) which SoC students will be familiar with typing in, instead of a Graphical User Interface (GUI).
 
 This guide is for developers looking to modify GULIO. For users of GULIO, please refer to the User Guide [here](UserGuide.md).
 
@@ -20,11 +23,13 @@ This guide is for developers looking to modify GULIO. For users of GULIO, please
     * [Command Component](#command-component)
     * [Model Component](#model-component)
     * [Storage Component](#storage-component)
+    * [Editor Component](#editor-component)
     * [Common Classes](#common-classes)
-* [implementation](#implementation)
-    * [Add Lesson](#add-lesson)
+* [Implementation](#implementation)
+    * [Adding of Lesson](#adding-of-lesson)
     * [Adding of Cheat-Sheet](#adding-of-cheat-sheet)
     * [Loading & Storing of Data](#loading--storing-of-data)
+    * [Design Considerations](#design-considerations)
     * [Future Features](#future-features)
 * [Appendix: Requirements](#appendix-requirements)
     * [Product Scope](#product-scope)
@@ -41,6 +46,7 @@ This guide is for developers looking to modify GULIO. For users of GULIO, please
     * [Adding a Lesson](#adding-a-lesson)
     * [Deleting a Lesson](#deleting-a-lesson)
     * [Opening a Link](#opening-a-link)
+* [Appendix: Command Summary](#command-summary)
 
 &nbsp;
 
@@ -48,12 +54,17 @@ This guide is for developers looking to modify GULIO. For users of GULIO, please
 
 ## How to Use This Guide
 
-> Icons used in this guide:<br>
-> <br>
-> 💡 - Indicates a tip that may be useful to you.<br>
-> ⚠ - indicates a warning that you should take note of.
+#### Icons & labels used in this guide:
+
+💡 - indicates a tip that may be useful to you.<br>
+⚠ - indicates a warning that you should take note of.<br>
+
+_Italic_ - Indicates that the content is a component.<br>
+`Inline code` - Indicates that the content is a class, method or input by the user.
 
 &nbsp;
+
+[🡅 Back to Table of Contents](#table-of-contents)
 
 ----
 
@@ -74,34 +85,38 @@ This guide is for developers looking to modify GULIO. For users of GULIO, please
 
 &nbsp;
 
+[🡅 Back to Table of Contents](#table-of-contents)
+
 ----
 
 ## Introduction
 
 ### Background of GULIO
 
-GULIO is a command line application for NUS SOC students to organize their modules. It has a 2-layer system: dashboard layer and module layer. In both layers, the user has access to a different set of commands.
+GULIO is a command line application for NUS SoC students to organize their modules. It has a 2-layer system: dashboard layer and module layer. In both layers, the user has access to a different set of commands.
 
 On start up, the user will be on the dashboard layer and has an overview of all their modules. They will have access to module management commands such as adding, deleting or opening a particular module. Opening a module then puts them on the module layer where they can interact with the data within the module.
 
 <p align="center">
-    <img width="973" src="userGuideImages/2-layer.jpg" alt="2-Layer System"><br>
+    <img width="600" src="userGuideImages/2-layer.png" alt="2-Layer System"><br>
     Figure 1 - Visualisation of GULIO’s 2-layer system
 </p>
 
-Currently, GULIO is a basic university module manager intended to provide students with an overview and consolidated workspace for all of their modules, lessons, tasks and cheat-sheets. Going forward, we feel that GULIO has the potential for many more features to be added, some of which are proposed in the “Implementation” section.
-
-### Purpose
-
-This document describes the architecture and implementation details of the command line application, GULIO.
+Currently, GULIO is a basic university module manager intended to provide students with an overview and consolidated workspace for all of their modules, lessons, tasks and cheat-sheets. Going forward, we feel that GULIO has the potential for many more features to be added, some of which are proposed in the [Implementation section](#implementation).
 
 ### Scope
 
-This describes the software architecture and software design decisions for the implementation of GULIO. The intended audience of this document is the developers, designers, and software testers of GULIO.
+This document describes the software architecture and software design decisions for the implementation of GULIO. The intended audience of this document is the developers, designers, and software testers of GULIO.
 
 &nbsp;
 
+[🡅 Back to Table of Contents](#table-of-contents)
+
 ----
+
+<div style="page-break-after: always;"></div>
+
+<!--@@author isaharon-->
 
 ## Design
 
@@ -112,17 +127,17 @@ This describes the software architecture and software design decisions for the i
     Figure 2 - GULIO Architecture Diagram
 </p>
 
-`Duke` contains the main method which is required by Java to run the application. It is responsible for instantiating and calling methods from the `UI`, `Parser` and `Command` components.
+_Duke_ contains the main method which is required by Java to run the application. It is responsible for instantiating and calling methods from the _UI_, _Parser_ and _Command_ components.
 
-Apart from `Duke`, the application consists of the following components:
+Apart from _Duke_, the application consists of the following components:
 
-* `UI`: Handles reading and printing
-* `Parser`: Validates and checks user input
-* `Command`: Executes commands
-* `Model`: Consists of data related to the application
-* `Storage`: Handles loading and storing of data into text files
-* `Editor`: Graphical interface for users to type
-* `Common`: collection of classes used by multiple components.
+* _UI_ : Handles reading and printing
+* _Parser_ : Validates and checks user input
+* _Command_ : Executes commands
+* _Model_ : Consists of data related to the application
+* _Storage_ : Handles loading and storing of data into text files
+* _Editor_ : Graphical interface for users to type
+* _Common_ : collection of classes used by multiple components
 
 
 GULIO is a local application that stores its application data using readable text files, allowing users the flexibility of viewing and editing data locally.
@@ -134,11 +149,13 @@ The way GULIO runs and handles user input can be described as follows:
     Figure 3 - GULIO Sequence Diagram
 </p>
 
-Upon start, the main class calls run() which enters a while loop and reads in user input. In the loop, the Parser component processes the user input into various commands implemented in GULIO. The loop ends when the user enters exit.
+Upon starting up GULIO, the `Duke` (main) class calls `run()` which enters a while loop and reads in user input. In the loop, the _Parser_ component processes the user input into various commands implemented in GULIO. The loop ends when the user enters exit.
 
 &nbsp;
 
-### UI component
+<div style="page-break-after: always;"></div>
+
+### UI Component
 
 **API**: `UI.java`
 
@@ -150,13 +167,13 @@ Upon start, the main class calls run() which enters a while loop and reads in us
 
 &nbsp;
 
-### Parser component
+### Parser Component
 
 **API**: `Parser.java`
 
 * Determines the command entered by the user
 
-* Parses the parameters needed by the `Command` object (for commands which require additional details)
+* Parses the parameters needed by subclasses of the `Command` object (for commands which require additional details)
 
 * Checks the validity of parsed parameters, in some instances calling methods from other relevant classes, e.g. calling a method from the `Lessons` class to verify parsed lesson links.
 
@@ -166,7 +183,9 @@ Upon start, the main class calls run() which enters a while loop and reads in us
 
 &nbsp;
 
-### Command component
+<div style="page-break-after: always;"></div>
+
+### Command Component
 
 <p align="center">
     <img width="973" src="developerGuideImages/command-component-level.png" alt="Dual Layer Command System"><br>
@@ -175,31 +194,33 @@ Upon start, the main class calls run() which enters a while loop and reads in us
 
 **API**: `Command.java`
 
-The `Command` component is an abstract class with methods that all commands inherit from. They can be further distinguished by commands that are used when the user is at the dashboard or when the user is within a module specified.
+The _Command_ component consist of an abstract `Command` class, as well as its subclasses. Each subclass handles a specific command in GULIO. The abstract `Command` class contains methods that these commands inherit from.
 
 Steps for command execution:
 
-1. The `Parser` after validating user input returns a `Command` object
-1. Each `Command` object has an execute method and gets executed by `Duke`
-1. Depending on the command, it may make changes to the objects within `Model`
-1. If there are changes, `Model` then updates application data via the `Storage` component
+1. The `Parser` validates user input and returns a `Command` object to `Duke`
+1. `Duke` calls the execute method in the `Command` object
+1. Depending on the command, it may make changes to the objects within the _Model_ component
+1. If there are changes, the _Model_ component then updates application data via the _Storage_ component
 1. The `UI` prints user information related to the command executed
 
 
 &nbsp;
 
-### Model component
+<div style="page-break-after: always;"></div>
+
+### Model Component
 
 <p align="center">
     <img width="973" src="developerGuideImages/designModel.png" alt="Class Diagram of Model"><br>
     Figure 5 - Class Diagram of Model
 </p>
 
-The Model component consists of classes that represent real-world objects related to the program. `ModuleList` represents the various modules that a typical SOC student may be taking within the semester. Each of these modules is encapsulated in the `Module` class which contains an ArrayList of `Lesson` and `Task` objects representing the lessons that would be conducted for the module and tasks that students have to complete for the modules they are taking.
+The Model component consists of classes that represent real-world objects related to the program. `ModuleList` represents the various modules that a typical SoC student may be taking within the semester. Each of these modules is encapsulated in the `Module` class which contains an ArrayList of `Lesson` and `Task` objects representing the lessons that would be conducted for the module and tasks that students have to complete for the modules they are taking.
 
 #### ModuleList:
 
-`ModuleList` is responsible for managing loaded modules in the program and keeping track if a user is at the dashboard or within a selected module. `ModuleList` interacts with the `Loader` and `Writer` components to load and write data respectively to the storage files. It also contains methods to sort data.
+`ModuleList` is responsible for managing loaded modules in the program and keeping track if a user is at the dashboard or within a selected module. `ModuleList` interacts with instances of the `Loader` and `Writer` class to load and write data respectively to the storage files. It also contains methods to sort data.
 
 The `ModuleList` class contains the attributes:
 
@@ -216,7 +237,7 @@ The `Module` class contains the attributes:
 
 #### Lesson:
 
-In SOC, lessons are conducted by a combination of lectures, tutorials or labs. To enforce this constraint, the Enum class `LessonType` contains a set of constants for lecture, tutorial and lab.
+In SoC, lessons are conducted by a combination of lectures, tutorials or labs. To enforce this constraint, the Enum class `LessonType` contains a set of constants for lecture, tutorial and lab.
 
 The `Lesson` class contains attributes related to a typical course lesson:
 
@@ -246,14 +267,18 @@ The `Task` class contains attributes related to an assignment, deadline or task 
 
 &nbsp;
 
-### Storage component
+<div style="page-break-after: always;"></div>
+
+<!--@@author 8kdesign-->
+
+### Storage Component
 
 <p align="center">
     <img width="973" src="developerGuideImages/storage.png" alt="Storage Structure"><br>
     Figure 6 - Illustration of Storage Structure
 </p>
 
-The `Storage` component is responsible for creating and loading modules and their respective data, as well as saving the data each time a change is made. It consists of two components: `Loader` and `Writer`. At every moment, `Loader` only loads up to 1 module at a time and data for each module is stored separately. This is done to ensure fast loading and writing of files.
+The _Storage_ component is responsible for creating and loading modules and their respective data, as well as saving the data each time a change is made. It consists of two classes: `Loader` and `Writer`. At every moment, `Loader` only loads up to 1 module at a time and data for each module is stored separately. This is done to ensure fast loading and writing of files.
 
 #### Loader:
 
@@ -269,17 +294,17 @@ The `Storage` component is responsible for creating and loading modules and thei
 
 &nbsp;
 
-### Editor component
+### Editor Component
 
 **API**: `TextEditor.java`
 
-The `Editor` component is responsible for opening the text editor to add or edit cheat-sheets/notes. It consists of two components:
+The _Editor_ component is responsible for opening the text editor to add or edit cheat-sheets/notes. It consists of two classes:
 
 #### Text Editor
 
 * Sets up the text editor
 * Loads existing file from Cheatsheet directory within a module for the edit cheat-sheet command
-* Flushes out the text from the editor when a different or new file is opened.
+* Flushes out the text from the editor when a different or new file is opened
 * Adjusts the font size of the text within the editor
 * Detects mouse input to change font style and save the text
 * Saves the text from the text editor into a file
@@ -290,7 +315,7 @@ The `Editor` component is responsible for opening the text editor to add or edit
 
 &nbsp;
 
-### Common classes
+### Common Classes
 
 Classes that are used by multiple components:
 * `CommonMethods`: Stores methods that are used by multiple components
@@ -298,109 +323,128 @@ Classes that are used by multiple components:
 * `Messages`: Stores strings that are printed by the `UI`
 * `DashboardCommands`: Enum of commands that can be used outside a module
 * `ModuleCommands`: Enum of commands that can be used inside a module
+* `InputValidator`: Validates user input such as file name
 
 &nbsp;
 
+[🡅 Back to Table of Contents](#table-of-contents)
+
 ----
+
+<div style="page-break-after: always;"></div>
 
 ## Implementation
 
 In this section, we highlight a few of the key features whose implementations are reflective of most of the commands available, as well as those that are more unique to GULIO.
 
-### Add Lesson
+### Adding of Lesson
 
-The AddLessonCommand class is responsible for the creation and addition of a new Lesson object to the lesson list of a given module. The following sequence diagrams shows how a new Lesson is created and added to the lesson list.
+The `AddLessonCommand` class is responsible for the creation and addition of a new `Lesson` object to the lesson list of a given module. The following sequence diagrams shows how a new `Lesson` is created and added to the lesson list.
 
 <p align="center">
     <img width="973" src="developerGuideImages/addLesson1.png" alt="parse() Sequence Diagram"><br>
     Figure 7 - parse() Sequence Diagram
 </p>
 
-The creation process is facilitated by the Parser class, which parses the appropriate arguments from the user input and initialises the Lesson object attributes with the parsed values.
+The creation process is facilitated by the `Parser` class, which parses the appropriate arguments from the user input and initialises the `Lesson` object attributes with the parsed values.
 
 <p align="center">
     <img width="973" src="developerGuideImages/addLessonCommand.png" alt="AddLessonCommand Constructor Sequence Diagram"><br>
     Figure 8 - AddLessonCommand Constructor Sequence Diagram
 </p>
 
-The newly created Lesson object is then passed to a new AddLessonCommand object as an argument.
+The newly created `Lesson` object is then passed to a new `AddLessonCommand` object as an argument.
 
 <p align="center">
     <img width="973" src="developerGuideImages/add_lesson_to_lesson_list.png" alt="execute() AddLessonCommand Sequence Diagram"><br>
     Figure 9 - execute() AddLessonCommand Sequence Diagram
 </p>
 
-AddLessonCommand then adds the Lesson object to the lesson list of a module. The lessons in the list are sorted by their lesson types each time a new lesson is added. AddLessonCommand also calls the writeLesson method of ModuleList to update the change locally.
+`AddLessonCommand` then adds the `Lesson` object to the lesson list of a module. The lessons in the list are sorted by their lesson types each time a new lesson is added. `AddLessonCommand` also calls the `writeLesson()` method of `ModuleList` to update the change locally.
 
 &nbsp;
 
 ### Adding of Cheat-Sheet
 
-The AddCheatSheetCommand class enables the creation, addition and saving of a .txt file to the current module’s “Cheatsheet” directory (see Figure 5). Upon creating a new AddCheatSheetCommand object and calling the “execute” method on it, the GULIO Text Editor application will also be automatically started.
+The `AddCheatSheetCommand` class enables the creation, addition and saving of a ".txt" file to the current module’s “Cheatsheet” directory (see [Figure 6](#storage-component)). Upon creating a new instance of it and calling the `execute()` method on it, a text editor window will also be automatically opened if there is none opened yet.
 
 An invocation of the `add cheat-sheet` command involves the following interactions:
 
 <p align="center">
-    <img width="973" src="developerGuideImages/addCheatSheetCommand-part1.png" alt="AddCheatSheetCommand Invocation Sequence Diagram"><br>
+    <img width="973" src="developerGuideImages/addCheatSheetCommand-v2.1-part1.png" alt="AddCheatSheetCommand Invocation Sequence Diagram A"><br>
     Figure 10a - AddCheatSheetCommand Invocation Sequence Diagram
 </p>
 
-When the AddCheatSheet command is executed, it gets the current selected module by calling the “getSelectedModule” method in ModuleList. It then calls the “getDirectoryPath” method to obtain the directory where the cheat-sheet would be saved in. Then, it calls the “openTextEditor” method in itself, which subsequently sets up and opens the GULIO Text Editor as seen below:
+When `AddCheatSheetCommand` is executed, it gets the currently selected module by calling the `getSelectedModule()` method in `ModuleList`. It then checks if the file name given by the user is invalid. If no, `AddCheatSheetCommand` proceeds to call the `getDirectoryPath()` method in itself to obtain the directory where the cheat-sheet would be saved to. It then calls the `openTextEditor()` method itself, which will interact with the `TextEditor` class, a Singleton class, in the following way:
 
 <p align="center">
-    <img width="973" src="developerGuideImages/addCheatSheetCommand-part2.png" alt="AddCheatSheetCommand Invocation Sequence Diagram"><br>
+    <img width="973" src="developerGuideImages/addCheatSheetCommand-v2.1-part2.png" alt="AddCheatSheetCommand Invocation Sequence Diagram B"><br>
     Figure 10b - Opening the Text Editor
 </p>
+
+The `openTextEditor()` method will first check if the single instance of `TextEditor` is `null`. If it is, then there is no text editor window currently opened and `openTextEditor()` proceeds to call the `createNew()` method of `TextEditor`. This initialises the single instance of `TextEditor` by calling the class constructor, which sets up, loads from previous data (if any) and opens the text editor for the user. The user can now start typing into the text editor.
 
 &nbsp;
 
 ### Loading & Storing of Data
 
-This section covers how the storage component works, from the loading of all module codes to the loading of individual module and creation of data files.
+This section covers how the _Storage_ component works, from the loading of all module codes to the loading of individual module and creation of data files.
 
 #### Saving of Data
 
-The Writer class is responsible for writing any changes to the module’s data file, as well as creating the file itself. Interaction with this writer class is done through the ModuleList class, whose methods are called by the other components of the app.
+The `Writer` class is responsible for writing any changes to the module’s data file, as well as creating the file itself. Interaction with the `Writer` class is done through the `ModuleList` class, whose methods are called by the other components of the app.
 
 <p align="center">
     <img width="973" src="developerGuideImages/writeModule.png" alt="writeModule() Sequence Diagram"><br>
     Figure 11 - writeModule() Sequence Diagram
 </p>
 
-Whenever some data in a module changes, the command that made those changes would call the method “writeModule” in ModuleList to update the change in the data file. This method would then call a method of the same name in the Writer class, which overwrites the existing data in the file with the new data.
+Whenever some data in a module changes, the command that made those changes would call the method `writeModule()` in `ModuleList` to update the change in the data file. This method would then call a method of the same name in the `Writer` class, which overwrites the existing data in the file with the new data.
 
 Due to how much data needs to be written each time, we decided to split the data file by module. That way, we only need to overwrite the module's data when changes are made.
 
+<!--@@author aliciatay-zls-->
+
 #### Loading of Data
 
-The Loader class is responsible for identifying all the modules currently added, as well as loading the data file of the selected class. Like the Writer class, methods in the Loader class are accessed by the other components via the ModuleList class.
+The `Loader` class is responsible for identifying all the modules currently added, as well as loading the data file of the selected class. Methods in the `Loader` class are accessed by the other components via the `ModuleList` class.
 
 <p align="center">
     <img width="973" src="developerGuideImages/loadModuleCode.png" alt="loadModuleCodes() Sequence Diagram"><br>
     Figure 12 - loadModuleCodes() Sequence Diagram
 </p>
 
-To identify modules in the “Data” directory, Duke would call “loadModuleCodes” method in the ModuleList. This method would then call the “getModules” method in Loader, which returns a list of module codes. For each of the identified module code, ModuleList would call its own “insertModule” method to add it to the module list.
+To identify modules in the “Data” directory, Duke would call `loadModuleCodes()` method in the `ModuleList`. This method would then call the `getModules()` method in `Loader`, which returns a list of module codes. For each of the identified module code, `ModuleList` would call its own `insertModule()` method to add it to the module list.
 
 <p align="center">
     <img width="973" src="developerGuideImages/setSelectedModule.png" alt="setSelectedModule() Sequence Diagram"><br>
     Figure 13 - setSelectedModule() Sequence Diagram
 </p>
 
-When a module is selected via the “setSelectedModule” method, the specified module code would be searched for in the module list. If it is inside, “loadModule” method in the Loader would be called. This method reads the module’s data file for data and adds them into a new instance of Module class. This Module is then returned to ModuleList and set as the selected module.
+When a module is selected via the `setSelectedModule()` method, the specified module code would be searched for in the module list. If it is inside, `loadModule()` method in the `Loader` would be called. This method reads the module’s data file for data and adds them into a new instance of `Module` class. This `Module` is then returned to `ModuleList` and set as the selected module.
 
-If the Loader failed to load the file, null would be returned. If null is not returned, ModuleList would sort the data and then use Writer to override the existing file. This is done to remove invalid entries that were initially in the file.
+If the `Loader` failed to load the file, null would be returned. If null is not returned, `ModuleList` would sort the data and then use `Writer` to override the existing file. This is done to remove invalid entries that were initially in the file.
 
 &nbsp;
+
+### Design Considerations
+
+#### Implementation of `EditLessonCommand` and `EditTaskCommand`
+
+* **Initial:** used a while loop for fields to be updated that require input validation (email, link for `EditLessonCommand` and deadline for `EditTaskCommand`). It only breaks when the user enters a valid input for the field, otherwise keeps prompting for another input.
+* **Current:** notifies the user that the field was unsuccessfully updated, goes on to the next field to be updated (if any).
+* **Rationale for change:** we decided not to use a while loop because we anticipated that if the user changed his/her mind halfway and no longer wanted to edit the lesson or task, they should not be stuck endlessly being prompted for a valid input. In future implementations we could combine both methods to make these commands even more user-friendly e.g. a "cancel" command together with the while loop.
 
 ### Future Features
 
 1. Add weightage for modules.
-1. Integrate with github.
-1. Project info. (Including links and emails)
+1. Integrate with Github.
+1. Group project information for each module (e.g. group members' emails, off-limit days).
 1. Search via a filter.
 
 &nbsp;
+
+[🡅 Back to Table of Contents](#table-of-contents)
 
 ----
 
@@ -410,11 +454,11 @@ If the Loader failed to load the file, null would be returned. If null is not re
 
 #### Target user profile:
 
-1. needs a consolidated and personalisable workspace to organize their university modules
-1. prefers desktop apps over other types
-1. can type fast
-1. is comfortable using CLI apps
-1. is familiar with command-line shell environment
+1. Needs a consolidated and personalisable workspace to organize their university modules
+1. Prefers desktop apps over other types
+1. Can type fast
+1. Is comfortable using CLI apps
+1. Is familiar with command-line shell environment
 
 #### Value proposition:
 
@@ -424,7 +468,7 @@ Efficiently view and update regularly-needed information on modules and deadline
 
 ### User Stories
 
-> 💡 Priorities levels:<br>
+> 💡 Priority levels:<br>
 > `1`: High (Must have)<br>
 > `2`: Medium (Good to have)<br>
 > `3`: Low (Unlikely to have)
@@ -437,9 +481,11 @@ Efficiently view and update regularly-needed information on modules and deadline
 | 1 | busy NUS student | add a task | keep track of assignments and deadlines for a module in an organised to-do list |
 | 1 | NUS student | get an overview of the module / lesson / task list | filter out specific information with a single command |
 | 2 | NUS student | delete a module | store the information only temporarily, e.g. for the semester/term |
-| 2 | NUS SOC student | open a module’s cheat sheet(s) | I have a handy list of tools for the module, tests and exams at my disposal |
-| 2 | NUS SOC student with many team projects | View a module’s project team information and contact details | keep track of the various teams I am in and communicate more efficiently with my teammates |
+| 2 | NUS SoC student | open a module’s cheat sheet(s) | I have a handy list of tools for the module, tests and exams at my disposal |
+| 2 | NUS SoC student with many team projects | View a module’s project team information and contact details | keep track of the various teams I am in and communicate more efficiently with my teammates |
 | 3 | busy NUS student | sort tasks by graded and done status | know which tasks are of highest priority |
+
+_Note: some are features to be implemented in future._
 
 &nbsp;
 
@@ -462,11 +508,15 @@ Efficiently view and update regularly-needed information on modules and deadline
 
 &nbsp;
 
+[🡅 Back to Table of Contents](#table-of-contents)
+
 ----
+
+<div style="page-break-after: always;"></div>
 
 ## Appendix: Instruction for Manual Testing
 
-Due to the 2-layer command system, you will need to identify which layer you are on in order to run the tests correctly.To identify which layer you are on, simply check the tag beside your input, known as the **input label**.
+Due to the 2-layer command system, you will need to identify which layer you are on in order to run the tests correctly. To identify which layer you are on, simply check the tag beside your input, known as the **input label**.
 
 * `GULIO` indicates that you are at the dashboard layer.
 * A module code (e.g. `CS2113T`) indicates that you are within that module.
@@ -492,7 +542,7 @@ Due to the 2-layer command system, you will need to identify which layer you are
 
 1. Shift the file GULIO.jar to your desired directory.
 1. Open command prompt and navigate to the directory.
-1. Enter `Java -jar GULIO.jar` into the command prompt.<br>
+1. Enter `java -jar GULIO.jar` into the command prompt.<br>
    >Expected outcome: Prints welcome message.
 
 
@@ -503,18 +553,19 @@ Due to the 2-layer command system, you will need to identify which layer you are
      >Expected outcome: Input label changes to `GULIO`.
 1. Enter `exit`.<br>
    >Expected outcome: Prints exit message and program closes.
-
+   
+<!--@@author H-horizon-->
 
 ### Adding a Module
 
 1. Ensure that no module is selected. Input label should show `GULIO`.
   1. If you see a module code instead, enter `close` to close the module.<br>
      >Expected outcome: Input label changes to `GULIO`.
-1. Enter `module`.<br>
+1. Enter `mods`.<br>
    >Expected outcome: Lists all existing modules.
 1. Enter `add <module>` where \<module> is a module code that is not in the list.<br>
    >Expected outcome: Prints success message.
-1. Enter `module` again to list all existing modules.<br>
+1. Enter `mods` again to list all existing modules.<br>
    >Expected outcome: New module is added to list.
 
 
@@ -523,11 +574,11 @@ Due to the 2-layer command system, you will need to identify which layer you are
 1. Ensure that no module is selected. Input label should show `GULIO`.
   1. If you see a module code instead, enter `close` to close the module.<br>
      >Expected outcome: Input label changes to `GULIO`.
-1. Enter `delete`.<br>
+1. Enter `del`.<br>
    >Expected outcome: Lists all existing modules and asks for indices to delete.
 1. Enter indices of modules to delete, separated by space.<br>
    >Expected outcome: Prints success message.
-1. Enter `module`.<br>
+1. Enter `mods`.<br>
    >Expected outcome: Specified modules deleted.
 
 ### Opening a Module
@@ -535,7 +586,7 @@ Due to the 2-layer command system, you will need to identify which layer you are
 1. Ensure that no module is selected. Input label should show `GULIO`.
   1. If you see a module code instead, enter `close` to close the module.<br>
      >Expected outcome: Input label changes to `GULIO`.
-1. Enter `modules`.<br>
+1. Enter `mods`.<br>
    >Expected outcome: Lists all existing modules.
 1. Enter `open <module>` where \<module> is a module code in the list.<br>
    >Expected outcome: Prints overview of module and input label changes to module code.
@@ -543,7 +594,7 @@ Due to the 2-layer command system, you will need to identify which layer you are
 ### Closing a Module
 
 1. Check if a module is selected via the input label.
-  1. If the input label shows `GULIO`, enter `modules`.<br>
+  1. If the input label shows `GULIO`, enter `mods`.<br>
      >Expected outcome: Lists all existing modules.
   1. Add a new module if the list is empty. E.g. `add CS2113T`
   1. Open one of the modules. E.g. `open CS2113T`<br><br>
@@ -554,31 +605,31 @@ Due to the 2-layer command system, you will need to identify which layer you are
 ### Adding a Lesson
 
 1. Check if a module is selected via the input label.
-  1. If the input label shows `GULIO`, enter `modules`.<br>
+  1. If the input label shows `GULIO`, enter `mods`.<br>
      >Expected outcome: Lists all existing modules.
   1. Add a new module if the list is empty. E.g. `add CS2113T`
   1. Open one of the modules. E.g. `open CS2113T`<br>
      >Expected outcome: Prints overview of module.
-1. Enter `lessons`.<br>
+1. Enter `lsn`.<br>
    >Expected outcome: Lists all lessons for that module.
-1. Add a new lesson. E.g. `add lesson lecture ;; Friday 6pm`.<br>
+1. Add a new lesson. E.g. `add lsn lecture ;; Friday 6pm`.<br>
    >Expected outcome: Prints success message.
-1. Enter `lessons`.<br>
+1. Enter `lsn`.<br>
    >Expected outcome: New lesson added to list.
 
 ### Deleting a Lesson
 
 1. Check if a module is selected via the input label.
-  1. If the input label shows `GULIO`, enter `modules`.<br>
+  1. If the input label shows `GULIO`, enter `mods`.<br>
      >Expected outcome: Lists all existing modules.
   1. Add a new module if the list is empty. E.g. `add CS2113T`
   1. Open one of the modules. E.g. `open CS2113T`<br>
      >Expected outcome: Prints overview of module.
-1. Enter `delete lesson`.<br>
+1. Enter `del lsn`.<br>
    >Expected outcome: Lists all existing lessons and asks for indices to delete.
 1. Enter indices of lessons to delete, separated by space.<br>
    >Expected outcome: Prints success message.
-1. Enter `lessons`.<br>
+1. Enter `lsn`.<br>
    >Expected outcome: Specified lessons removed from list.
 
 ### Opening a Link
@@ -589,9 +640,63 @@ Due to the 2-layer command system, you will need to identify which layer you are
 1. Add a new module if the list is empty. E.g. `add CS2113T`
 1. Open one of the modules. E.g. `open CS2113T`<br>
    >Expected outcome: Prints overview of module.
-1. Add a new lesson with a link. E.g. `add lesson lecture ;; Friday 4pm ;; https://nus-sg.zoom.us/`. <br>
+1. Add a new lesson with a link. E.g. `add lsn lecture ;; Friday 4pm ;; https://nus-sg.zoom.us/`. <br>
    >Expected outcome: Prints success message.
 1. Enter `link`.<br>
    >Expected outcome: Lists all existing lessons.
 1. Enter indices of lessons with links to open.<br>
    >Expected outcome: Opens link for lessons selected.
+
+
+&nbsp;
+
+[🡅 Back to Table of Contents](#table-of-contents)
+
+----
+
+<div style="page-break-after: always;"></div>
+
+# Command Summary
+
+### Dashboard Commands Summary
+
+| Keyword | Format |
+| --- | --- |
+| help | `help` |
+| exit | `exit` |
+| open | `open <module code>`|
+| add | `add <module code>` |
+| delete | `del` |
+| modules | `mods` |
+
+<div style="page-break-after: always;"></div>
+
+### Module Commands Summary
+
+| Keyword | Format |
+| --- | --- |
+| help | `help` |
+| close | `close` |
+| info | `info` | 
+| add lesson | `add lsn <lesson type> ;; <day & time> ;; <link> ;; <teaching staff name> ;; <email>` |
+| delete lesson | `del lsn` |
+| edit lesson | `edit lsn` |
+| link | `link` |
+| teacher | `tch` |
+| lessons | `lsn` |
+| add task | `add task <task name> ;; <deadline> ;; <remarks>` |
+| delete task | `del task` |
+| edit task | `edit task` |
+| mark | `mark` |
+| unmark | `unmark` |
+| tasks | `task` |
+| add cheat-sheet | `add cs <cheat-sheet name>` |
+| delete cheat-sheet | `del cs <cheat-sheet name>` |
+| edit cheat-sheet | `edit cs <cheat-sheet name>` |
+| cheat-sheets | `cs` |
+
+&nbsp;
+
+[🡅 Back to Table of Contents](#table-of-contents)
+
+----

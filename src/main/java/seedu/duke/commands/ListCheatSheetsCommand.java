@@ -1,7 +1,6 @@
 package seedu.duke.commands;
 
 import seedu.duke.exception.CommandException;
-import seedu.duke.module.Module;
 import seedu.duke.module.ModuleList;
 import seedu.duke.ui.UI;
 
@@ -20,11 +19,12 @@ import static seedu.duke.common.Constants.PATH_DELIMITER;
 import static seedu.duke.common.Messages.MESSAGE_EMPTY_CHEAT_SHEET_DIRECTORY;
 import static seedu.duke.common.Messages.MESSAGE_LIST_OF_CHEAT_SHEETS;
 
-public class ListCheatSheetCommand extends Command {
+public class ListCheatSheetsCommand extends Command {
     protected static String directoryPath;
     protected static Path directoryAbsolutePath;
 
-    public ListCheatSheetCommand() {
+    //@@author H-horizon
+    public ListCheatSheetsCommand() {
         directoryPath = FOLDER_PATH + PATH_DELIMITER + ModuleList.getSelectedModuleCode() + PATH_DELIMITER
                 + STRING_CHEATSHEET + PATH_DELIMITER;
         directoryAbsolutePath = Paths.get(directoryPath);

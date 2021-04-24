@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import static seedu.duke.common.CommonMethods.getDaysRemaining;
 import static seedu.duke.common.Messages.FORMAT_DAYS_REMAINING;
+import static seedu.duke.common.Messages.FORMAT_DAY_REMAINING;
 import static seedu.duke.common.Messages.FORMAT_DUE_TODAY;
 import static seedu.duke.common.Messages.FORMAT_INDEX_ITEM;
 import static seedu.duke.common.Messages.FORMAT_OVERDUE;
@@ -52,8 +53,6 @@ public class UI {
      * @return String of input.
      */
     public String readUserInput() {
-        // assert that user is entering input with "\n" and not signals like Ctrl+D
-        assert scanner.hasNextLine();
         return scanner.nextLine();
     }
 
@@ -114,6 +113,8 @@ public class UI {
             return String.format(FORMAT_OVERDUE, -daysRemaining);
         } else if (daysRemaining == 0) {
             return FORMAT_DUE_TODAY;
+        } else if (daysRemaining == 1) {
+            return FORMAT_DAY_REMAINING;
         } else {
             return String.format(FORMAT_DAYS_REMAINING, daysRemaining);
         }

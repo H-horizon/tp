@@ -3,6 +3,7 @@ package seedu.duke.editor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
@@ -12,15 +13,15 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import static seedu.duke.common.Constants.DEFAULT_FONT_SIZE;
-import static seedu.duke.common.Constants.DEFAULT_FONT_STYLE;
-import static seedu.duke.common.Constants.FONT_COLOUR_ICON;
+
 import static seedu.duke.common.Constants.FONT_SIZE_MAX;
 import static seedu.duke.common.Constants.FONT_SIZE_MIN;
 import static seedu.duke.common.Constants.SAVE_ICON;
@@ -30,31 +31,62 @@ import static seedu.duke.common.Constants.TEXT_EDITOR_HEIGHT;
 import static seedu.duke.common.Constants.TEXT_EDITOR_TITLE;
 import static seedu.duke.common.Constants.TEXT_EDITOR_WIDTH;
 import static seedu.duke.common.Messages.NEWLINE;
+import static seedu.duke.common.Messages.TEXT_EDITOR_INSTRUCTION;
 
 public class TextEditor extends JFrame implements ActionListener {
 
     public static String[] fontStyles = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     public static JTextArea textArea = new JTextArea();
     public static JScrollPane scrollPane = new JScrollPane(textArea);
-    public static JButton fontColourButton = new JButton(FONT_COLOUR_ICON);
     public static JComboBox<String> fontStyleBox = new JComboBox<>(fontStyles);
     public static JButton saveButton = new JButton(SAVE_ICON);
     public static String pathName;
+    
+    private static TextEditor textEditor;
 
-    public TextEditor(String path) {
+    //@@author H-horizon
+    private TextEditor(String path, String fileName) {
         setPathName(path);
-        setTextEditorTitle();
+        setTextEditorTitle(fileName);
         setCloseIcon();
         setTextEditorDimension();
-        setFontStyleIcon();
         setSaveIcon();
         setTextArea();
+        setTextAreaToVoid();
         setScrollPane();
+        setInstructionText();
         setLayout();
         setShortcutListener();
+        loadFile(path);
     }
 
-    public void loadFile(String filePath) {
+    //@@author 8kdesign
+    public static boolean createNew(String path, String fileName) {
+        if (textEditor == null) {
+            textEditor = new TextEditor(path, fileName);
+            textEditor.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    super.windowClosed(e);
+                    textEditor = null;
+                }
+            });
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void setInstructionText() {
+        this.add(new JLabel(TEXT_EDITOR_INSTRUCTION));
+    }
+
+    public static boolean isNull() {
+        return textEditor == null;
+    }
+    
+    //@@author H-horizon
+    private void loadFile(String filePath) {
         File file = new File(filePath);
         Scanner fileReader = null;
         try {
@@ -71,7 +103,7 @@ public class TextEditor extends JFrame implements ActionListener {
         }
     }
 
-    public void setTextAreaToVoid() {
+    private void setTextAreaToVoid() {
         textArea.setText(null);
     }
 
@@ -137,8 +169,8 @@ public class TextEditor extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
-    private void setTextEditorTitle() {
-        this.setTitle(TEXT_EDITOR_TITLE);
+    private void setTextEditorTitle(String fileName) {
+        this.setTitle(String.format(TEXT_EDITOR_TITLE, fileName));
     }
 
     @Override

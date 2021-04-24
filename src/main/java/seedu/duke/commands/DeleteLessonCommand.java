@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import static seedu.duke.common.Constants.DELETE;
 import static seedu.duke.common.Constants.TYPE_LESSON;
 import static seedu.duke.common.Messages.FORMAT_INDEX_ITEM;
+import static seedu.duke.common.Messages.FORMAT_INDEX_LESSON_DETAILS;
 import static seedu.duke.common.Messages.MESSAGE_ENTER_INDICES;
 import static seedu.duke.common.Messages.MESSAGE_LESSONS_LIST_EMPTY;
 import static seedu.duke.common.Messages.MESSAGE_LESSONS_TO_DELETE;
@@ -57,7 +58,10 @@ public class DeleteLessonCommand extends Command {
     }
 
     /**
-     * Prints list of lessons in specified module.
+     * Prints list of lessons in specified module. 
+     * For each lesson, prints lesson type and exactly one detail (a field that was successfully added) 
+     * to differentiate same lesson types (e.g. multiple tutorials).
+     * Does not print any detail for the lesson if none of its fields have been filled yet.
      *
      * @param lessonList ArrayList of lessons in specified module.
      * @param ui         Instance of UI.
@@ -66,7 +70,12 @@ public class DeleteLessonCommand extends Command {
         int counter = 1;
         for (Lesson lesson : lessonList) {
             String lessonType = lesson.getLessonTypeString();
-            ui.printMessage(String.format(FORMAT_INDEX_ITEM, counter, lessonType));
+            if (lesson.getDetailsStringIfAny() != null) {
+                String appendString = lesson.getDetailsStringIfAny();
+                ui.printMessage(String.format(FORMAT_INDEX_LESSON_DETAILS, counter, lessonType, appendString));
+            } else {
+                ui.printMessage(String.format(FORMAT_INDEX_ITEM, counter, lessonType));
+            }
             counter++;
         }
     }

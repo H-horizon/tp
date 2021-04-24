@@ -32,11 +32,12 @@ public class Messages {
     public static final String MESSAGE_EDITED_FIELD = "Updated %s.";
     public static final String MESSAGE_NOT_UPDATED = "Field not updated.";
     public static final String MESSAGE_FIELDS_TO_EDIT = "Which fields would you like to edit?";
+  
     
     //Parser messages
     public static final String MESSAGE_MODULE_CODE_EMPTY = "Module not specified.";
-    public static final String MESSAGE_INVALID_MODULE_CODE = "Invalid module code. "
-            + "Only valid NUS module codes are allowed.";
+    public static final String MESSAGE_INVALID_MODULE_CODE = "Invalid module code. " + NEWLINE
+            + "Please use the format [Subject][Catalog Number][Variant]. (E.g. CS2113T)";
 
     public static final String MESSAGE_LESSON_FIELDS_EMPTY = "Missing lesson details.";
     public static final String MESSAGE_INVALID_LESSON_TYPE = "Invalid lesson type entered.";
@@ -44,6 +45,7 @@ public class Messages {
     public static final String MESSAGE_INVALID_LESSON_EMAIL = "Invalid email entered. ";
 
     public static final String MESSAGE_TASK_FIELDS_EMPTY = "Missing task details.";
+    public static final String MESSAGE_TASK_DESCRIPTION_EMPTY = "Missing task description.";
     public static final String MESSAGE_INVALID_TASK_DEADLINE = "Invalid/missing deadline.";
 
     public static final String MESSAGE_NON_INTEGER_INDICES = "Warning, non-integer values removed: %s";
@@ -69,6 +71,8 @@ public class Messages {
 
 
     //Lesson messages
+    public static final String FORMAT_INDEX_LESSON_DETAILS = "%d. %s (%s)";
+
     public static final String MESSAGE_ADDED_LESSON = "Added %s to lesson list.";
     public static final String MESSAGE_REMOVED_LESSON = "Removed %s.";
     public static final String MESSAGE_OPENED_LESSON_LINK = "Opening %s link in browser.";
@@ -86,7 +90,9 @@ public class Messages {
 
     public static final String MESSAGE_LESSONS_LIST_EMPTY = "Your list of lessons is empty.";
 
+    
     //Task messages
+    public static final String FORMAT_DAY_REMAINING = " (1 day remaining)";
     public static final String FORMAT_DAYS_REMAINING = " (%d days remaining)";
     public static final String FORMAT_OVERDUE = " (Overdue by %d days)";
     public static final String FORMAT_DUE_TODAY = " (Due today)";
@@ -177,5 +183,9 @@ public class Messages {
     public static final String MESSAGE_EMPTY_CHEAT_SHEET_DIRECTORY = "You have no cheat-sheet.";
     public static final String MESSAGE_OPEN_FILE = "Opened %s.";
     public static final String MESSAGE_INVALID_FILE_NAME = "Invalid file name.";
+    public static final String MESSAGE_CLOSE_CHEATSHEET_FIRST = 
+            "Please close the existing cheat-sheet first.";
+    public static final String TEXT_EDITOR_INSTRUCTION = 
+            "Press esc to close, ctrl-s to save, ctrl-up to enlarge and ctrl-down to shrink text.";
 
 }

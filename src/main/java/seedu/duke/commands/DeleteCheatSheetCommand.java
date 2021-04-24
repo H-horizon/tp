@@ -19,6 +19,7 @@ public class DeleteCheatSheetCommand extends AddCheatSheetCommand {
 
     public static String filePath;
 
+    //@@author H-horizon
     public DeleteCheatSheetCommand(String nameOfFile) {
         super(nameOfFile);
     }
@@ -35,7 +36,7 @@ public class DeleteCheatSheetCommand extends AddCheatSheetCommand {
             performFunction(ui, path);
         } catch (InvalidPathException | IOException e) {
             ui.printMessage(String.format(MESSAGE_FILE_DOES_NOT_EXIST, fileName));
-            Command command = new ListCheatSheetCommand();
+            Command command = new ListCheatSheetsCommand();
             command.execute(ui);
         }
     }

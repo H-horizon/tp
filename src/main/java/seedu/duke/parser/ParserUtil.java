@@ -13,11 +13,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static seedu.duke.common.Constants.ADD;
-import static seedu.duke.common.Constants.DELETE;
+import static seedu.duke.common.Constants.DELETE_COMMAND;
 import static seedu.duke.common.Constants.DELIM;
 import static seedu.duke.common.Constants.EDIT;
 import static seedu.duke.common.Constants.EMPTY_STRING;
@@ -48,6 +49,7 @@ import static seedu.duke.common.Messages.MESSAGE_NON_INTEGER_INDEX;
 import static seedu.duke.common.Messages.MESSAGE_NON_INTEGER_INDICES;
 import static seedu.duke.common.Messages.MESSAGE_OUT_OF_BOUNDS_INDEX;
 import static seedu.duke.common.Messages.MESSAGE_OUT_OF_BOUNDS_INDICES;
+import static seedu.duke.common.Messages.MESSAGE_TASK_DESCRIPTION_EMPTY;
 import static seedu.duke.common.Messages.MESSAGE_TASK_FIELDS_EMPTY;
 
 public class ParserUtil {
@@ -133,6 +135,11 @@ public class ParserUtil {
         Arrays.fill(taskDetails, EMPTY_STRING);
         fillTaskDetails(input, taskDetails);
 
+        // user does not enter a task description
+        if (taskDetails[0].isEmpty()) {
+            throw new ParserException(MESSAGE_TASK_DESCRIPTION_EMPTY);
+        }
+
         String description = taskDetails[INDEX_DESCRIPTION];
         LocalDate deadline = convertToDate(taskDetails[INDEX_DEADLINE]);
         String remarks = taskDetails[INDEX_REMARKS_PARSER];
@@ -204,7 +211,7 @@ public class ParserUtil {
         String[] commandWordAndArgs = getCommandWordAndArgs(input);
         // command is more than 1 word
         if (commandWordAndArgs[INDEX_COMMAND_WORD].equalsIgnoreCase(ADD)
-                || commandWordAndArgs[INDEX_COMMAND_WORD].equalsIgnoreCase(DELETE)
+                || commandWordAndArgs[INDEX_COMMAND_WORD].equalsIgnoreCase(DELETE_COMMAND)
                 || commandWordAndArgs[INDEX_COMMAND_WORD].equalsIgnoreCase(EDIT)) {
             commandWordAndArgs = getTwoCommandWordAndArgs(input);
         }
@@ -277,7 +284,7 @@ public class ParserUtil {
      *
      * @param input full user input string
      * @param max   the maximum accepted index
-     * @return an integer arraylist with valid indices
+     * @return a sorted integer arraylist with valid indices
      * @throws NumberFormatException if non-integer value is present in the input
      */
     public static ArrayList<Integer> checkIndices(String input, int max) {
@@ -286,6 +293,7 @@ public class ParserUtil {
 
         // assumption that input is non-null
         assert (input != null);
+        
         ArrayList<String> nonIntegers = parseIndicesFromString(rawIndices, input);
         if (nonIntegers.size() != 0) {
             printNonIntegerWarning(nonIntegers, ui);
@@ -298,6 +306,9 @@ public class ParserUtil {
         if (removed.size() != 0) {
             printOutOfBoundsWarning(removed, ui);
         }
+
+        // Sorts array list
+        Collections.sort(indices);
         return indices;
     }
 

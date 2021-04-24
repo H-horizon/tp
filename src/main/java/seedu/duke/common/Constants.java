@@ -19,9 +19,11 @@ public class Constants {
     public static final String DELIM = ";;";
     public static final String WHITESPACE = " ";
     public static final String EMPTY_STRING = "";
+    public static final String COLON = ": ";
 
     public static final String ADD = "add";
     public static final String DELETE = "delete";
+    public static final String DELETE_COMMAND = "del";
     public static final String EDIT = "edit";
 
     //Lecture type
@@ -82,8 +84,14 @@ public class Constants {
     public static final String UNMARK = "mark as undone";
 
     //Parser
-    public static final String FORMAT_MODULE_CODE = "([A-z]{2,3}[\\d]{4}[A-z]?)";
-    public static final String FORMAT_EMAIL = "[A-z0-9_.-]+@[A-z.]+";
+    public static final String FORMAT_MODULE_CODE = "([A-z]{2,3}[\\d]{4}[A-z]{0,2})";
+    // General Email Regex (RFC 5322 Official Standard) taken from https://emailregex.com/
+    public static final String FORMAT_EMAIL = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
+            + "[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\"
+            + "[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]"
+            + "*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]"
+            + "?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\"
+            + "[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
     public static final String FORMAT_LINK = "[(http(s)?):\\/\\/(www\\.)?a-zA-Z0-9@:%._\\-\\+~#=]{2,256}\\.[a-z]{2,6}"
             + "\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
 
@@ -116,11 +124,8 @@ public class Constants {
     public static final int TEXT_EDITOR_HEIGHT = 800;
     public static final int TEXT_AREA_WIDTH = 700;
     public static final int TEXT_AREA_HEIGHT = 700;
-    public static final String DEFAULT_FONT_STYLE = "Times New Roman";
-    public static final int DEFAULT_FONT_SIZE = 16;
-    public static final String FONT_COLOUR_ICON = "Font colour";
     public static final String SAVE_ICON = "Save";
-    public static final String TEXT_EDITOR_TITLE = "Gulio Text Editor";
+    public static final String TEXT_EDITOR_TITLE = "%s - Gulio Text Editor";
 
     //Cheat sheet
     public static final String STRING_CHEATSHEET = "Cheatsheet";

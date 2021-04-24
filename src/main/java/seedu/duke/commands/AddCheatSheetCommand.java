@@ -7,7 +7,7 @@ import seedu.duke.module.ModuleList;
 import seedu.duke.ui.UI;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -19,11 +19,14 @@ import static seedu.duke.common.Constants.STRING_CHEATSHEET;
 import static seedu.duke.common.Constants.TXT_FORMAT;
 import static seedu.duke.common.Messages.MESSAGE_CHEATSHEET_ADDED;
 import static seedu.duke.common.Messages.MESSAGE_CHEAT_SHEET_ALREADY_EXISTS;
+import static seedu.duke.common.Messages.MESSAGE_CLOSE_CHEATSHEET_FIRST;
 import static seedu.duke.common.Messages.MESSAGE_INVALID_FILE_NAME;
+import static seedu.duke.common.InputValidator.hasInvalidCharacter;
 
 public class AddCheatSheetCommand extends Command {
     public static String fileName;
 
+    //@@author H-horizon
     public AddCheatSheetCommand(String nameOfFile) {
         fileName = nameOfFile;
     }
@@ -31,7 +34,8 @@ public class AddCheatSheetCommand extends Command {
     @Override
     public void execute(UI ui) throws CommandException {
         Module module = ModuleList.getSelectedModule();
-        if (fileName.isEmpty()) {
+        boolean isInvalidFileName = hasInvalidCharacter(fileName);
+        if (fileName.isEmpty() || isInvalidFileName) {
             throw new CommandException(MESSAGE_INVALID_FILE_NAME);
         }
         try {
@@ -50,16 +54,19 @@ public class AddCheatSheetCommand extends Command {
         if (Files.exists(path)) {
             ui.printMessage(MESSAGE_CHEAT_SHEET_ALREADY_EXISTS);
         } else {
+            if (!TextEditor.isNull()) {
+                //already open
+                ui.printMessage(MESSAGE_CLOSE_CHEATSHEET_FIRST);
+                return;
+            }
             try {
                 File file = new File(filePath);
-            } catch (NullPointerException e) {
+                file.createNewFile();
+                ui.printMessage(String.format(MESSAGE_CHEATSHEET_ADDED, fileName));
+                TextEditor.createNew(filePath, fileName);
+            } catch (NullPointerException | IOException e) {
                 ui.printMessage(MESSAGE_INVALID_FILE_NAME);
             }
-
-            ui.printMessage(String.format(MESSAGE_CHEATSHEET_ADDED, fileName));
-            TextEditor textEditor = new TextEditor(filePath);
-            textEditor.setTextAreaToVoid();
-            textEditor.saveTextToFile();
         }
     }
 
@@ -72,8 +79,6 @@ public class AddCheatSheetCommand extends Command {
         } catch (InvalidPathException e) {
             ui.printMessage(MESSAGE_INVALID_FILE_NAME);
         }
-
-
         return directoryPath;
     }
 }
